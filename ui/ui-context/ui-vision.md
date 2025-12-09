@@ -42,6 +42,53 @@ The system understands what the user is doing, what they're looking at, and what
 
 ---
 
+## UI Context Tracking System
+
+### Purpose
+
+Track all user interactions and UI state to provide agents with complete awareness, enabling natural language commands like "research this lead" to work seamlessly.
+
+### What We Track
+
+**User Actions:** Clicks, selections, navigation, search queries, voice commands
+**UI State:** Current page, visible components, filters, selected items, panel states
+**Visual Context:** Viewport items, scroll position, focus element
+
+### Context Structure
+
+```javascript
+{
+  page: "leads",
+  view: "table",
+  selectedItems: [{ type: "lead", id: "123", data: {...} }],
+  visibleData: { leads: [...], totalCount: 47 },
+  filters: { status: "active" },
+  searchQuery: "techcorp",
+  recentActions: [...]
+}
+```
+
+### Implementation
+
+**Client-Side:** In-memory context manager captures events automatically
+**Storage:** Session storage backup, optional Redis for history
+**Privacy:** Client-side first, user data stays in browser
+**Performance:** <1ms event capture, <10ms serialization, <5MB memory
+
+### Agent Integration
+
+Context automatically included with every user message:
+```javascript
+sendToAgent({
+  message: "Research this lead",
+  context: contextManager.getCurrentContext()
+})
+```
+
+Agent understands "this lead" = currently selected lead data.
+
+---
+
 ## Interaction Model
 
 ### Conversational First, Traditional When Faster
