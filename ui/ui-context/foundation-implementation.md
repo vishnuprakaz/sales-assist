@@ -7,28 +7,39 @@
 - `/src/lib/context-manager.ts` - Context manager singleton
 - `/src/hooks/useUIContext.ts` - React hooks
 
-**What it does:**
-Tracks all UI state (page, selections, visible data, filters, actions) and provides it to agents. Singleton pattern with event-based updates, session storage backup.
+**Tracks:**
+- Current page and view
+- Selected items (generic: leads, deals, contacts, etc.)
+- Visible data on screen
+- Recent user actions (last 10)
 
-**Performance:**
-- Event capture: <0.5ms (target <1ms)
-- Serialization: <5ms (target <10ms)
+**Generic implementation:**
+All components use same hooks. Works with any data type.
 
-**Usage:**
 ```typescript
-import { usePageContext, useSelection } from '@/hooks/useUIContext';
-
-function LeadsPage() {
-  usePageContext('leads');
-  const { selectedItems, select } = useSelection();
-  // ...
+function AnyComponent({ items, type }) {
+  usePageContext('pageName');
+  useVisibleData(items, type);
+  const { select } = useSelection();
+  
+  const handleClick = (item) => {
+    select([{ type, id: item.id, data: item }]);
+  };
 }
 ```
 
-**API:**
-- `contextManager.getCurrentContext()` - Get full state
-- `contextManager.update({ type, payload })` - Update state
-- `contextManager.subscribe(callback)` - Listen to changes
+**Sent to backend:**
+```json
+{
+  "message": "user command",
+  "context": {
+    "page": "leads",
+    "selectedItems": [...],
+    "visibleData": {...},
+    "recentActions": [...]
+  }
+}
+```
 
 ---
 
