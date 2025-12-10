@@ -33,8 +33,10 @@ export function AppLayout({ children, pageName = 'dashboard' }: AppLayoutProps) 
       <Sidebar />
 
       {/* Main Content Area */}
-      <main className="ml-16 pt-14 pb-32">
-        {children}
+      <main className="ml-16 pt-14 pb-32 min-h-screen">
+        <div className="p-6">
+          {children}
+        </div>
       </main>
 
       {/* Input Box */}
