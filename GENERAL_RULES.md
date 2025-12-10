@@ -115,25 +115,28 @@ Agents must strictly adhere to the following principles:
 
 ### 7\. Context Documentation Rules
 
+**Purpose:** Context files are for **agent-to-agent communication**, not user documentation. When a new agent joins, they should understand the project state without reading all code.
+
 Agents **MUST update context files** when:
 
   * Implementing a new feature or component.
-  * Making significant code changes or architectural decisions.
+  * Making significant architectural decisions.
   * Introducing new patterns or approaches.
 
 **What to Document:**
 
-  * **Implementation:** What was implemented, why this approach was chosen, key code changes, dependencies.
-  * **Approaches:** Design/architectural patterns used, coding standards, and best practices.
-  * **Maintenance:** Keep context concise, relevant, and current.
+  * **What was built:** Files created, key functionality added.
+  * **Why this approach:** Brief rationale for technical decisions.
+  * **How it works:** Essential implementation details (API, usage, integration points).
+  * **What's next:** Pending tasks or known limitations.
 
 **Documentation Style:**
 
-  * **Be concise:** Only essential information, no over-explanation.
-  * **No excessive formatting:** Avoid unnecessary tables, emojis, or decorative elements that consume tokens.
-  * **Straight to the point:** Technical facts only, no marketing language.
-  * **Code examples:** Only when necessary to clarify implementation.
-  * **Keep it minimal:** If it can be understood from code, don't document it.
+  * **Minimal:** Only what another agent needs to continue work.
+  * **Technical:** Facts only, no explanations of obvious things.
+  * **No fluff:** No emojis, tables, marketing language, or excessive formatting.
+  * **Code examples:** Only when necessary to show usage or integration.
+  * **Rule:** If it's clear from reading the code, don't document it.
 
 -----
 
