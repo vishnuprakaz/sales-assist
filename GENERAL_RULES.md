@@ -127,6 +127,14 @@ Agents **MUST update context files** when:
   * **Approaches:** Design/architectural patterns used, coding standards, and best practices.
   * **Maintenance:** Keep context concise, relevant, and current.
 
+**Documentation Style:**
+
+  * **Be concise:** Only essential information, no over-explanation.
+  * **No excessive formatting:** Avoid unnecessary tables, emojis, or decorative elements that consume tokens.
+  * **Straight to the point:** Technical facts only, no marketing language.
+  * **Code examples:** Only when necessary to clarify implementation.
+  * **Keep it minimal:** If it can be understood from code, don't document it.
+
 -----
 
 ### 8\. Standard Development Workflow
