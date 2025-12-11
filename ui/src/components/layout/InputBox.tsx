@@ -382,14 +382,6 @@ export function InputBox({ onSubmit, isProcessing = false }: InputBoxProps) {
         </form>
       </div>
 
-      {/* Keyboard shortcut hint */}
-      {!isFocused && !isExpanded && !isProcessing && (
-        <div className="text-center pb-2">
-          <span className="text-xs text-gray-400">
-            Press <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-xs">⌘K</kbd> to focus
-          </span>
-        </div>
-      )}
     </div>
   );
 }
