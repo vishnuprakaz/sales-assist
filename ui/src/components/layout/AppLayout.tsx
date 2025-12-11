@@ -92,9 +92,12 @@ export function AppLayout({ children, pageName = 'dashboard' }: AppLayoutProps) 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging) return;
 
-    const newWidth = window.innerWidth - e.clientX;
-    const constrainedWidth = Math.min(Math.max(newWidth, 300), 800);
-    setAgentPanelWidth(constrainedWidth);
+    // Use requestAnimationFrame for smooth 60fps updates
+    requestAnimationFrame(() => {
+      const newWidth = window.innerWidth - e.clientX;
+      const constrainedWidth = Math.min(Math.max(newWidth, 300), 800);
+      setAgentPanelWidth(constrainedWidth);
+    });
   }, [isDragging]);
 
   const handleMouseUp = useCallback(() => {
@@ -132,7 +135,8 @@ export function AppLayout({ children, pageName = 'dashboard' }: AppLayoutProps) 
           style={{ 
             width: isAgentPanelVisible 
               ? `calc(100% - 64px - ${agentPanelWidth}px - 4px)` // 64px sidebar, 4px drag handle
-              : 'calc(100% - 64px - 4px)' // Leave space for drag handle
+              : 'calc(100% - 64px - 4px)', // Leave space for drag handle
+            transition: isDragging ? 'none' : 'width 0.2s ease-out' // No transition during drag for immediate response
           }}
         >
           <div className="h-full overflow-y-auto p-6 pb-36">
@@ -143,30 +147,25 @@ export function AppLayout({ children, pageName = 'dashboard' }: AppLayoutProps) 
         {/* Drag Handle (Always visible on right edge) */}
         <div
           className={cn(
-            "w-1 bg-transparent hover:bg-border cursor-col-resize transition-colors duration-200 group flex-shrink-0",
-            isDragging && "bg-primary",
-            !isAgentPanelVisible && "hover:bg-primary/50"
+            "w-1 bg-gray-300 hover:bg-gray-400 cursor-col-resize flex-shrink-0 relative",
+            "transition-colors duration-150",
+            isDragging && "bg-gray-600",
+            !isAgentPanelVisible && "hover:bg-gray-500"
           )}
           onMouseDown={handleMouseDown}
           title={isAgentPanelVisible ? "Resize agent panel" : "Drag to open agent panel"}
         >
-          {/* Visual indicator */}
+          {/* Hover area for easier targeting */}
+          <div className="absolute inset-y-0 -left-2 -right-2" />
+          
+          {/* Visual indicator for better visibility */}
           <div 
             className={cn(
-              "w-full h-full relative",
-              "group-hover:bg-border/50",
-              isDragging && "bg-primary"
+              "w-full h-full bg-gray-400 opacity-80 hover:opacity-100",
+              isDragging && "bg-gray-600 opacity-100",
+              !isAgentPanelVisible && "animate-pulse"
             )}
-          >
-            {/* Drag dots - show on hover or when panel closed */}
-            {(!isAgentPanelVisible || isDragging) && (
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-1">
-                <div className="w-0.5 h-0.5 bg-muted-foreground rounded-full" />
-                <div className="w-0.5 h-0.5 bg-muted-foreground rounded-full" />
-                <div className="w-0.5 h-0.5 bg-muted-foreground rounded-full" />
-              </div>
-            )}
-          </div>
+          />
         </div>
 
         {/* Column 3: Agent Response Panel (Fixed width when visible) */}
