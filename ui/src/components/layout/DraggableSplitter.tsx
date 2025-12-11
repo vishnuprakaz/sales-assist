@@ -14,6 +14,7 @@ interface DraggableSplitterProps {
   maxLeftWidth?: number;
   initialLeftWidth?: number;
   className?: string;
+  isOpen?: boolean;
 }
 
 export function DraggableSplitter({
@@ -21,7 +22,8 @@ export function DraggableSplitter({
   minLeftWidth = 300,
   maxLeftWidth = 1000,
   initialLeftWidth = 600,
-  className
+  className,
+  isOpen = true
 }: DraggableSplitterProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [, setLeftWidth] = useState(initialLeftWidth);
@@ -64,30 +66,34 @@ export function DraggableSplitter({
   return (
     <div
       className={cn(
-        "relative w-1 bg-transparent hover:bg-border/50 cursor-col-resize transition-colors duration-200 group",
+        "relative w-2 bg-transparent hover:bg-border/30 cursor-col-resize transition-colors duration-200 group",
         isDragging && "bg-primary/50",
+        !isOpen && "hover:bg-primary/20", // More visible when panel is closed
         className
       )}
       onMouseDown={handleMouseDown}
+      title={isOpen ? "Resize panels" : "Drag to open agent panel"}
     >
-      {/* Visual indicator - only visible on hover or during drag */}
+      {/* Visual indicator */}
       <div 
         className={cn(
-          "absolute inset-y-0 left-1/2 -translate-x-1/2 w-1 bg-border/30 transition-all duration-200",
-          "group-hover:bg-primary/50 group-hover:w-1.5",
-          isDragging && "bg-primary w-1.5 shadow-lg"
+          "absolute inset-y-0 left-1/2 -translate-x-1/2 w-0.5 transition-all duration-200",
+          isOpen 
+            ? "bg-border/30 group-hover:bg-primary/50 group-hover:w-1" 
+            : "bg-border/50 group-hover:bg-primary/70 group-hover:w-1",
+          isDragging && "bg-primary w-1 shadow-lg"
         )}
       />
       
       {/* Extended hover area for easier interaction */}
-      <div className="absolute inset-y-0 -left-2 -right-2" />
+      <div className="absolute inset-y-0 -left-3 -right-3" />
       
-      {/* Drag indicator dots - only show during drag */}
-      {isDragging && (
+      {/* Drag indicator dots - show during drag or when closed */}
+      {(isDragging || !isOpen) && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-1">
-          <div className="w-1 h-1 bg-primary rounded-full" />
-          <div className="w-1 h-1 bg-primary rounded-full" />
-          <div className="w-1 h-1 bg-primary rounded-full" />
+          <div className={cn("w-1 h-1 rounded-full", isOpen ? "bg-primary" : "bg-muted-foreground")} />
+          <div className={cn("w-1 h-1 rounded-full", isOpen ? "bg-primary" : "bg-muted-foreground")} />
+          <div className={cn("w-1 h-1 rounded-full", isOpen ? "bg-primary" : "bg-muted-foreground")} />
         </div>
       )}
     </div>

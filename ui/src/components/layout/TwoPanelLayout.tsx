@@ -8,6 +8,7 @@
 import { useState, useCallback, type ReactNode } from 'react';
 import { DraggableSplitter } from './DraggableSplitter';
 import { AgentResponsePanel } from './AgentResponsePanel';
+import { cn } from '@/lib/utils';
 
 interface AgentMessage {
   id: string;
@@ -53,13 +54,21 @@ export function TwoPanelLayout({
     onToggleAgentPanel?.();
   }, [onToggleAgentPanel]);
 
+  const handleDragOpen = useCallback((newLeftWidth: number) => {
+    // If panel is closed and user drags, open the panel
+    if (!agentPanelVisible) {
+      onToggleAgentPanel?.();
+    }
+    handleResize(newLeftWidth);
+  }, [agentPanelVisible, onToggleAgentPanel, handleResize]);
+
   return (
-    <div className="flex h-full">
+    <div className="flex h-full relative">
       {/* Left Panel - Main Content */}
       <div 
         className="flex-shrink-0 h-full overflow-hidden"
         style={{ 
-          width: agentPanelVisible ? leftPanelWidth : '100%',
+          width: agentPanelVisible ? leftPanelWidth : 'calc(100% - 12px)', // Leave space for drag handle
           transition: agentPanelVisible ? 'none' : 'width 300ms ease-out'
         }}
       >
@@ -68,20 +77,23 @@ export function TwoPanelLayout({
         </div>
       </div>
 
-      {/* Draggable Splitter - only show when right panel is visible */}
-      {agentPanelVisible && (
-        <DraggableSplitter
-          onResize={handleResize}
-          minLeftWidth={400}
-          maxLeftWidth={window.innerWidth - 64 - minPanelWidth - 4}
-          initialLeftWidth={leftPanelWidth}
-        />
-      )}
+      {/* Always-visible Draggable Splitter */}
+      <DraggableSplitter
+        onResize={handleDragOpen}
+        minLeftWidth={400}
+        maxLeftWidth={typeof window !== 'undefined' ? window.innerWidth - 64 - minPanelWidth - 8 : 800}
+        initialLeftWidth={leftPanelWidth}
+        className={cn(
+          "flex-shrink-0",
+          agentPanelVisible ? "relative" : "absolute right-0 top-0 z-20"
+        )}
+        isOpen={agentPanelVisible}
+      />
 
       {/* Right Panel - Agent Response */}
       {agentPanelVisible && (
         <div 
-          className="flex-shrink-0 h-full"
+          className="flex-shrink-0 h-full animate-in slide-in-from-right duration-300"
           style={{ 
             width: rightPanelWidth,
             minWidth: minPanelWidth,
