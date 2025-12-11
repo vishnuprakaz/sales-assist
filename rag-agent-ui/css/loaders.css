@@ -1,0 +1,352 @@
+/* Content Loading Indicators */
+.content-loading-indicator {
+    display: flex;
+    justify-content: flex-start;
+    padding: 12px 0;
+    transition: opacity 0.3s ease;
+}
+
+.loading-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.loading-dots span {
+    width: 8px;
+    height: 8px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    animation: dotPulse 1.4s infinite ease-in-out both;
+}
+
+.loading-dots span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+/* Thinking loader animation */
+.thinking-loader {
+    padding: 8px 0;
+}
+
+.thinking-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.thinking-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    animation: thinkingBounce 1.4s ease-in-out infinite;
+}
+
+.thinking-dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.thinking-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.thinking-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Products loading animation */
+.products-loading {
+    padding: 16px;
+    text-align: center;
+}
+
+.loading-bar {
+    width: 100%;
+    height: 3px;
+    background: #f0f0f0;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.loading-progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 2px;
+    animation: loadingProgress 1.5s ease-in-out infinite;
+}
+
+/* Modern light animated skeleton loaders */
+.function-call-loader,
+.function-response-loader {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #f1f3f4;
+    margin: 8px 0;
+    animation: fadeIn 0.4s ease-out;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.loader-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.loader-icon-wrapper {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-icon {
+    font-size: 18px;
+    opacity: 0.7;
+    animation: gentlePulse 2s ease-in-out infinite;
+}
+
+.loader-spinner {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border: 2px solid #f1f3f4;
+    border-top: 2px solid #e8eaed;
+    border-radius: 50%;
+    animation: smoothSpin 2s linear infinite;
+}
+
+.loader-content {
+    flex: 1;
+}
+
+.loader-text {
+    height: 16px;
+    background: linear-gradient(90deg, #f1f3f4 25%, #e8eaed 50%, #f1f3f4 75%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    animation: shimmer 1.8s infinite linear;
+    margin-bottom: 6px;
+    width: 70%;
+}
+
+.loader-subtext {
+    height: 12px;
+    background: linear-gradient(90deg, #f1f3f4 25%, #e8eaed 50%, #f1f3f4 75%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    animation: shimmer 1.8s infinite linear;
+    animation-delay: 0.3s;
+    width: 90%;
+}
+
+.loader-progress-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.loader-progress {
+    flex: 1;
+    height: 3px;
+    background: #f8f9fa;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, #e8eaed 50%, transparent 100%);
+    border-radius: 2px;
+    animation: progressWave 2s ease-in-out infinite;
+}
+
+.loader-dots {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.loader-dots .dot {
+    width: 4px;
+    height: 4px;
+    background: #e8eaed;
+    border-radius: 50%;
+    animation: dotWave 1.5s ease-in-out infinite;
+}
+
+.loader-dots .dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.loader-dots .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader-dots .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Skeleton loaders for product cards */
+.skeleton-product-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.skeleton-product-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #f1f3f4;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.skeleton-image {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(90deg, #f1f3f4 25%, #e8eaed 50%, #f1f3f4 75%);
+    background-size: 200% 100%;
+    border-radius: 6px;
+    animation: shimmer 1.8s infinite linear;
+    flex-shrink: 0;
+}
+
+.skeleton-product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.skeleton-title {
+    height: 14px;
+    background: linear-gradient(90deg, #f1f3f4 25%, #e8eaed 50%, #f1f3f4 75%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    animation: shimmer 1.8s infinite linear;
+    width: 80%;
+}
+
+.skeleton-description {
+    height: 10px;
+    background: linear-gradient(90deg, #f1f3f4 25%, #e8eaed 50%, #f1f3f4 75%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    animation: shimmer 1.8s infinite linear;
+    animation-delay: 0.2s;
+    width: 100%;
+}
+
+.skeleton-price {
+    height: 12px;
+    background: linear-gradient(90deg, #f1f3f4 25%, #e8eaed 50%, #f1f3f4 75%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    animation: shimmer 1.8s infinite linear;
+    animation-delay: 0.4s;
+    width: 50%;
+}
+
+/* Thinking Content Styles */
+.thinking-content {
+    padding: 12px 0;
+    opacity: 0.4;
+    font-style: italic;
+}
+
+.thought-tag {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 500;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.thinking-text {
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+/* Loader Animations */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes smoothSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes gentlePulse {
+
+    0%,
+    100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.9;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes progressWave {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes dotWave {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+

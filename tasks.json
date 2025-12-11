@@ -43,7 +43,7 @@
       "feature": "F001",
       "component": "UI",
       "status": "completed",
-      "reviewed_status": "pending"
+      "reviewed_status": "completed"
     },
     {
       "id": "T006",
@@ -51,7 +51,7 @@
       "description": "Build floating input box component that stays at bottom of screen. Must support multiple states (idle, focused, processing, error), keyboard shortcuts (Cmd+K to focus, Escape to clear), auto-expand on focus, and show visual indicators during AI processing. Include voice input button placeholder. Component should handle text input and emit events for message submission.",
       "feature": "F001",
       "component": "UI",
-      "status": "pending",
+      "status": "completed",
       "reviewed_status": "pending"
     },
     {
