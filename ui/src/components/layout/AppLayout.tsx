@@ -61,10 +61,21 @@ export function AppLayout({}: AppLayoutProps) {
       document.body.style.userSelect = '';
       document.body.style.cursor = '';
       
-      // Use a ref or closure to get the actual final width at the moment of mouse up
-      // This ensures we're checking the width that was set during the last mousemove
+      // Use a small delay to ensure transition is applied for smooth snapping
       setTimeout(() => {
         setLeftPanelWidth(currentWidth => {
+          // Special case: If starting from 0% (right panel full) and user drags left
+          // Snap to 70% left panel (30% right panel)
+          if (effectiveStartWidth === 0 && currentWidth > 0 && currentWidth < 50) {
+            return 70;
+          }
+          
+          // Special case: If starting from 100% (left panel full) and user drags right
+          // Snap to 70% left panel (30% right panel)
+          if (effectiveStartWidth === 100 && currentWidth < 100 && currentWidth > 50) {
+            return 70;
+          }
+          
           // Snap behavior based on final position
           if (currentWidth < 50) {
             // Dragged below 50% - snap to show right panel only (0% left = 100% right)
@@ -76,7 +87,7 @@ export function AppLayout({}: AppLayoutProps) {
           // Otherwise keep the dragged position (50-80% range)
           return currentWidth;
         });
-      }, 0);
+      }, 50); // Small delay to ensure isDragging is false and transition is applied
       
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
@@ -115,7 +126,7 @@ export function AppLayout({}: AppLayoutProps) {
               className="bg-gray-100 overflow-hidden flex flex-col"
               style={{ 
                 width: `${leftPanelWidth}%`,
-                transition: isDragging ? 'none' : 'width 150ms ease-out',
+                transition: isDragging ? 'none' : 'width 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                 padding: leftPanelWidth > 0 ? '1rem 0.5rem 1rem 1rem' : '0'
               }}
             >
@@ -193,7 +204,7 @@ export function AppLayout({}: AppLayoutProps) {
             className="bg-gray-100 overflow-hidden"
             style={{ 
               width: `${100 - leftPanelWidth}%`,
-              transition: isDragging ? 'none' : 'width 150ms ease-out'
+              transition: isDragging ? 'none' : 'width 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)'
             }}
           >
             {/* Inner content wrapper with fixed width for sliding effect */}
