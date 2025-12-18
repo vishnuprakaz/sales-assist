@@ -8,6 +8,8 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { InputBox } from './InputBox';
 import { DragHandle } from './DragHandle';
+import { Header } from './Header';
+import { Sidebar } from './Sidebar';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -17,6 +19,7 @@ interface AppLayoutProps {
 export function AppLayout({}: AppLayoutProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [leftPanelWidth, setLeftPanelWidth] = useState(50); // Percentage
+  const [isNavExpanded, setIsNavExpanded] = useState(false);
 
   const handleMessageSubmit = (message: string, files?: any[], context?: any[]) => {
     console.log('Message submitted:', message);
@@ -100,24 +103,12 @@ export function AppLayout({}: AppLayoutProps) {
   return (
     <div className="h-screen bg-gray-100 overflow-hidden flex flex-col">
       {/* Header */}
-      <header className="h-16 bg-gray-100 flex">
-        {/* Left Nav Panel - Same width as below */}
-        <div className="w-64 bg-gray-100 flex items-center px-6">
-          <span className="text-lg font-medium text-gray-700">Logo</span>
-        </div>
-        
-        {/* Header Right Content */}
-        <div className="flex-1 bg-gray-100">
-          {/* Header content */}
-        </div>
-      </header>
-
+      <Header />
+      
       {/* Two Panel Layout */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Nav Panel - Minimized */}
-        <div className="w-16 bg-gray-100">
-          {/* Left nav content */}
-        </div>
+        {/* Left Nav Panel - Sidebar */}
+        <Sidebar onExpandChange={setIsNavExpanded} />
 
         {/* Main Content Area - Two Panels */}
         <div className="flex-1 flex overflow-hidden">
@@ -127,27 +118,34 @@ export function AppLayout({}: AppLayoutProps) {
               style={{ 
                 width: `${leftPanelWidth}%`,
                 transition: isDragging ? 'none' : 'width 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                padding: leftPanelWidth > 0 ? '1rem 0.5rem 1rem 1rem' : '0'
+                padding: leftPanelWidth > 0 ? '0 0.5rem 1rem 0' : '0'
               }}
             >
               {/* Inner content wrapper with fixed width for sliding effect */}
               <div 
-                className="h-full flex flex-col"
-                style={{
-                  width: leftPanelWidth < 50 ? 'calc(50vw - 64px - 1rem)' : '100%',
-                  minWidth: leftPanelWidth < 50 ? 'calc(50vw - 64px - 1rem)' : 'auto'
+                className="h-full flex flex-col relative"
+          style={{
+                  width: leftPanelWidth < 50 && leftPanelWidth > 0 ? 'calc(50vw - 64px - 1rem)' : '100%',
+                  minWidth: leftPanelWidth < 50 && leftPanelWidth > 0 ? 'calc(50vw - 64px - 1rem)' : 'auto',
+                  opacity: leftPanelWidth < 50 ? leftPanelWidth / 50 : 1,
+                  transition: isDragging ? 'none' : 'opacity 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  maskImage: leftPanelWidth > 0 && leftPanelWidth < 50 ? `linear-gradient(to right, black calc(${leftPanelWidth}vw - 144px), transparent calc(${leftPanelWidth}vw - 64px))` : 'none',
+                  WebkitMaskImage: leftPanelWidth > 0 && leftPanelWidth < 50 ? `linear-gradient(to right, black calc(${leftPanelWidth}vw - 144px), transparent calc(${leftPanelWidth}vw - 64px))` : 'none'
                 }}
               >
               {/* Sample Table Card - Full Height */}
-              <div className="bg-white rounded-xl shadow-sm flex-1 flex flex-col overflow-hidden">
+              <div 
+                className="bg-white rounded-xl flex-1 flex flex-col overflow-hidden"
+                style={{ minWidth: '600px' }}
+              >
                 {/* Table Header */}
                 <div className="p-6 border-b border-gray-200">
                   <h2 className="text-lg font-semibold text-gray-800">Leads Table</h2>
-                </div>
-                
+          </div>
+
                 {/* Table Content - Scrollable */}
                 <div className="flex-1 overflow-auto">
-                  <table className="w-full">
+                  <table className="w-full" style={{ minWidth: '600px' }}>
                     <thead className="sticky top-0 bg-white border-b border-gray-200">
                       <tr>
                         <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Name</th>
@@ -194,26 +192,34 @@ export function AppLayout({}: AppLayoutProps) {
                 </div>
               </div>
               </div>
-            </div>
+          </div>
 
           {/* Drag Handle */}
           <DragHandle onMouseDown={handleDragStart} isDragging={isDragging} />
 
           {/* Right Panel - Agent Panel */}
           <div 
-            className="bg-gray-100 overflow-hidden"
+            className="bg-gray-100 overflow-hidden relative"
             style={{ 
               width: `${100 - leftPanelWidth}%`,
               transition: isDragging ? 'none' : 'width 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)'
             }}
           >
+            {/* Top gradient fade */}
+            <div 
+              className="absolute top-0 left-0 right-0 h-16 pointer-events-none z-10"
+              style={{
+                background: 'linear-gradient(to bottom, rgb(243, 244, 246) 0%, rgba(243, 244, 246, 0) 100%)'
+              }}
+            />
+
             {/* Inner content wrapper with fixed width for sliding effect */}
             <div 
               className="h-full overflow-auto"
               style={{
-                width: (100 - leftPanelWidth) < 20 ? 'calc(20vw - 64px)' : '100%',
-                minWidth: (100 - leftPanelWidth) < 20 ? 'calc(20vw - 64px)' : 'auto',
-                padding: (100 - leftPanelWidth) > 0 ? '1rem 1rem 1rem 0.5rem' : '0'
+                width: (100 - leftPanelWidth) < 20 && (100 - leftPanelWidth) > 0 ? 'calc(20vw - 64px)' : '100%',
+                minWidth: (100 - leftPanelWidth) < 20 && (100 - leftPanelWidth) > 0 ? 'calc(20vw - 64px)' : 'auto',
+                padding: (100 - leftPanelWidth) > 0 ? '2rem 1rem 1rem 0.5rem' : '0'
               }}
             >
             <div className="space-y-6">
@@ -226,7 +232,7 @@ export function AppLayout({}: AppLayoutProps) {
               </div>
 
               {/* Custom UI: List Component - With card wrapper */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-800 mb-3">Quick Actions</h3>
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 cursor-pointer">
@@ -254,7 +260,7 @@ export function AppLayout({}: AppLayoutProps) {
               </div>
 
               {/* Custom UI: Chart Component - With card wrapper */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-800 mb-4">Pipeline Value</h3>
                 <div className="space-y-3">
                   <div>
@@ -291,7 +297,7 @@ export function AppLayout({}: AppLayoutProps) {
                     <span className="text-lg font-semibold text-gray-800">$250,000</span>
                   </div>
                 </div>
-              </div>
+          </div>
 
               {/* Agent Text Response - Blends with background */}
               <div className="text-sm text-gray-700 leading-relaxed">
@@ -304,7 +310,7 @@ export function AppLayout({}: AppLayoutProps) {
       </div>
 
       {/* Input Box */}
-      <InputBox onSubmit={handleMessageSubmit} isProcessing={false} />
+      <InputBox onSubmit={handleMessageSubmit} isProcessing={false} sidebarExpanded={isNavExpanded} />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Send, Loader2, Paperclip, X, FileText, Image as ImageIcon } from 'lucide-react';
 import { useUIContext, useSelection } from '@/hooks/useUIContext';
 import { cn } from '@/lib/utils';
+import { getCurrentTheme } from '@/lib/theme';
 
 interface ContextChip {
   id: string;
@@ -31,9 +32,10 @@ interface AttachedFile {
 interface InputBoxProps {
   onSubmit?: (message: string, files?: AttachedFile[], context?: ContextChip[]) => void;
   isProcessing?: boolean;
+  sidebarExpanded?: boolean;
 }
 
-export function InputBox({ onSubmit, isProcessing = false }: InputBoxProps) {
+export function InputBox({ onSubmit, isProcessing = false, sidebarExpanded = false }: InputBoxProps) {
   const [message, setMessage] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -47,6 +49,9 @@ export function InputBox({ onSubmit, isProcessing = false }: InputBoxProps) {
   
   const context = useUIContext();
   const { selectedItems } = useSelection();
+  
+  // Get current theme
+  const theme = getCurrentTheme('light');
 
   // Determine expansion state
   const hasContent = message.trim().length > 0;
@@ -193,7 +198,13 @@ export function InputBox({ onSubmit, isProcessing = false }: InputBoxProps) {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50">
+    <div 
+      className="fixed bottom-0 right-0 z-50 transition-all duration-[600ms]"
+      style={{ 
+        left: sidebarExpanded ? '200px' : '64px',
+        transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)'
+      }}
+    >
       {/* Background gradient */}
       <div 
         className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-transparent"
@@ -204,22 +215,23 @@ export function InputBox({ onSubmit, isProcessing = false }: InputBoxProps) {
         <form
           ref={formRef}
           className={cn(
-            "relative bg-white rounded-[26px] shadow-lg border-0 transition-all duration-[600ms] cubic-bezier-[0.4,0,0.2,1]",
+            "relative rounded-[26px] border transition-all duration-[600ms] cubic-bezier-[0.4,0,0.2,1]",
             "flex flex-col justify-center overflow-visible",
             // Compact state: 180px × 44px
             !isExpanded && !showActions
               ? "w-[180px] h-[44px] gap-0"
-              : "w-full max-w-[850px] min-h-[44px] gap-2 justify-start",
-            // Enhanced shadow for idle state
-            !isExpanded && !isProcessing && "shadow-[0_2px_12px_rgba(0,0,0,0.08),0_1px_4px_rgba(0,0,0,0.04),0_0_0_1px_rgba(76,175,80,0.1),0_0_20px_rgba(76,175,80,0.15)]",
+              : "w-[70%] sm:w-[60%] md:w-[50%] lg:w-[45%] xl:w-[40%] min-h-[44px] gap-2 justify-start",
             // Expanded state styling
-            showActions && "min-h-[110px] px-5 py-[18px] rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_6px_rgba(0,0,0,0.06)]",
-            // Processing state
-            isProcessing && "shadow-[0_4px_16px_rgba(76,175,80,0.2)]",
+            showActions && "min-h-[110px] px-5 py-[18px] rounded-2xl",
             // Drag over state
-            isDragOver && "bg-blue-50 border-2 border-dashed border-blue-400 animate-pulse"
+            isDragOver && "border-2 border-dashed animate-pulse"
           )}
           style={{
+            backgroundColor: theme.background.primary,
+            borderColor: isFocused ? theme.border.hover : theme.border.primary,
+            boxShadow: !isExpanded && !showActions 
+              ? '0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)'
+              : '0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04)',
             padding: !isExpanded && !showActions ? '10px 12px 10px 18px' : undefined
           }}
           onMouseEnter={() => setIsHovered(true)}
@@ -299,7 +311,12 @@ export function InputBox({ onSubmit, isProcessing = false }: InputBoxProps) {
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="w-7 h-7 bg-gray-100 hover:bg-emerald-600 hover:text-white border border-gray-200 hover:border-emerald-600 rounded-full flex-shrink-0 transition-all duration-200 shadow-sm"
+                className="w-7 h-7 rounded-full flex-shrink-0 transition-all duration-200"
+                style={{
+                  backgroundColor: theme.background.secondary,
+                  color: theme.text.secondary,
+                  borderColor: theme.border.primary,
+                }}
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isProcessing}
               >
@@ -329,12 +346,13 @@ export function InputBox({ onSubmit, isProcessing = false }: InputBoxProps) {
               disabled={isProcessing}
               rows={1}
               className={cn(
-                "flex-1 bg-transparent border-none outline-none resize-none text-gray-900 placeholder:text-gray-500 transition-all duration-500",
+                "flex-1 bg-transparent border-none outline-none resize-none transition-all duration-500",
                 showActions 
                   ? "text-base leading-8 px-4 py-3 min-h-[56px] opacity-100" 
                   : "text-sm leading-6 px-0 py-0 min-h-[24px] opacity-0 pointer-events-none"
               )}
               style={{ 
+                color: theme.text.primary,
                 lineHeight: showActions ? '32px' : '24px',
                 transitionDelay: showActions ? '200ms' : '0ms'
               }}
@@ -345,12 +363,16 @@ export function InputBox({ onSubmit, isProcessing = false }: InputBoxProps) {
               type="submit"
               disabled={(!message.trim() && attachedFiles.length === 0) || isProcessing}
               className={cn(
-                "rounded-full bg-emerald-700 hover:bg-emerald-800 text-white border-0 flex-shrink-0 transition-all duration-500",
+                "rounded-full border-0 flex-shrink-0 transition-all duration-500",
                 showActions 
                   ? "w-10 h-10 hover:scale-105" 
                   : "w-[18px] h-[18px] hover:scale-110",
                 "disabled:opacity-50 disabled:cursor-not-allowed"
               )}
+              style={{
+                backgroundColor: theme.interactive.primary,
+                color: theme.background.primary,
+              }}
             >
               {isProcessing ? (
                 <Loader2 className={cn("animate-spin", showActions ? "w-5 h-5" : "w-3 h-3")} />
@@ -373,8 +395,11 @@ export function InputBox({ onSubmit, isProcessing = false }: InputBoxProps) {
           {/* Collapsed state overlay text */}
           {!showActions && !isProcessing && (
             <div 
-              className="absolute left-[18px] top-1/2 -translate-y-1/2 text-gray-600 text-sm font-medium pointer-events-none select-none transition-opacity duration-200"
-              style={{ fontSize: '14px' }}
+              className="absolute left-[18px] top-1/2 -translate-y-1/2 text-sm font-medium pointer-events-none select-none transition-opacity duration-200"
+              style={{ 
+                fontSize: '14px',
+                color: theme.text.secondary
+              }}
             >
               Ask me...
             </div>
