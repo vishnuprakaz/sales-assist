@@ -113,7 +113,7 @@ export function AppLayout({}: AppLayoutProps) {
         {/* Main Content Area - Two Panels */}
         <div className="flex-1 flex overflow-hidden">
             {/* Left Panel - Main Dynamic Canvas */}
-            <div 
+        <div 
               className="bg-gray-100 overflow-hidden flex flex-col"
               style={{ 
                 width: `${leftPanelWidth}%`,
